@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Pizza.Backend.Domain;
@@ -15,7 +15,8 @@ public partial class Usuario
 
     public string PasswordHash { get; set; } = null!;
 
-    public string Role { get; set; } = "Cliente";
+    public int? RolId { get; set; }
+    public virtual Rol? Rol { get; set; }
 
     public DateTime? FechaRegistro { get; set; }
 
@@ -33,4 +34,6 @@ public partial class Usuario
     public virtual ICollection<Tarjeta> Tarjetas { get; set; } = new List<Tarjeta>();
 
     public virtual Carrito? Carrito { get; set; }
+    
+    public virtual ICollection<HistorialAcceso> HistorialAccesos { get; set; } = new List<HistorialAcceso>();
 }
