@@ -61,7 +61,7 @@ namespace Pizza.Backend.Infrastructure.Data
                         Nombre = "Alberto Emiliano",
                         Email = "blcdoker@gmail.com",
                         PasswordHash = BCrypt.Net.BCrypt.HashPassword("Doker367"),
-                        Role = "Admin",
+// No Role assigning here for now,
                         FechaRegistro = DateTime.UtcNow
                     });
                     context.SaveChanges();

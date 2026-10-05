@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Pizza.Backend.Application.DTOs;
 using Pizza.Backend.Ports;
 
@@ -6,6 +7,7 @@ namespace Pizza.Backend.Adapters;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableRateLimiting("AuthPolicy")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;

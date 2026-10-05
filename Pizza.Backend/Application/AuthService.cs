@@ -35,6 +35,13 @@ public class AuthService : IAuthService
         }
 
         var token = GenerateJwtToken(user);
+        
+        user.HistorialAccesos.Add(new HistorialAcceso 
+        {
+            FechaAcceso = DateTime.UtcNow,
+            Accion = "Login Exitoso"
+        });
+        await _userRepository.UpdateUserAsync(user);
 
         return new LoginResponseDto { Token = token };
     }
@@ -123,13 +130,24 @@ public class AuthService : IAuthService
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim("nombre", user.Nombre),
-            new Claim(ClaimTypes.Role, user.Role)
+            new Claim(ClaimTypes.Role, user.Rol?.Nombre ?? "Cliente")
         };
+
+        if (user.Rol != null && user.Rol.RolPermisos != null)
+        {
+            foreach (var rp in user.Rol.RolPermisos)
+            {
+                if (rp.Permiso != null)
+                {
+                    claims.Add(new Claim("Permiso", rp.Permiso.Nombre));
+                }
+            }
+        }
 
         var token = new JwtSecurityToken(
             issuer: jwtIssuer,

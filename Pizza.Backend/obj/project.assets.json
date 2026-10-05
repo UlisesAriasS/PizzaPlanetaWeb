@@ -8067,19 +8067,19 @@
     ]
   },
   "packageFolders": {
-    "/home/doker/.nuget/packages/": {}
+    "/root/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/doker/Descargas/Pizzeria/Pizza.Backend/Pizza.Backend.csproj",
+      "projectUniqueName": "/app/Pizza.Backend.csproj",
       "projectName": "Pizza.Backend",
-      "projectPath": "/home/doker/Descargas/Pizzeria/Pizza.Backend/Pizza.Backend.csproj",
-      "packagesPath": "/home/doker/.nuget/packages/",
-      "outputPath": "/home/doker/Descargas/Pizzeria/Pizza.Backend/obj/",
+      "projectPath": "/app/Pizza.Backend.csproj",
+      "packagesPath": "/root/.nuget/packages/",
+      "outputPath": "/app/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/doker/.nuget/NuGet/NuGet.Config"
+        "/root/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -8097,6 +8097,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -8161,7 +8166,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.121/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.425/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

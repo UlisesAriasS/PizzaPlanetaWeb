@@ -9,6 +9,8 @@ using Pizza.Backend.Infrastructure.Repositories;
 using Pizza.Backend.Ports;
 using Pizza.Backend.Infrastructure;
 using Stripe;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 // Load .env file
 Env.Load();
@@ -74,6 +76,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    // Política que exige el permiso específico
+    options.AddPolicy("RequireAdmin", policy => 
+        policy.RequireClaim("Permiso", "DashboardAdmin"));
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -84,9 +93,21 @@ builder.Services.AddCors(options =>
     options.AddPolicy(CORS_POLICY, builder =>
         // For production, replace with your frontend's actual domain
         // e.g., builder.WithOrigins("https://your-pizzeria.com")
-        builder.WithOrigins("http://localhost:3000", "https://localhost:3001") 
+        builder.WithOrigins("http://localhost:3000", "https://localhost:3001", "http://localhost:5173") 
                .AllowAnyMethod()
                .AllowAnyHeader());
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("AuthPolicy", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 5; // Máximo 5 intentos por minuto
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
 var app = builder.Build();
@@ -118,6 +139,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors(CORS_POLICY);
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 

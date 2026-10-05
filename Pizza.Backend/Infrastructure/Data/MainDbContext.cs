@@ -16,6 +16,10 @@ public partial class MainDbContext : DbContext
     public virtual DbSet<Usuario> Usuarios { get; set; }
     public virtual DbSet<Menu> Menus { get; set; }
     public virtual DbSet<Favorito> Favoritos { get; set; }
+    public virtual DbSet<Rol> Roles { get; set; }
+    public virtual DbSet<Permiso> Permisos { get; set; }
+    public virtual DbSet<RolPermiso> RolPermisos { get; set; }
+    public virtual DbSet<HistorialAcceso> HistorialAccesos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -106,6 +110,27 @@ public partial class MainDbContext : DbContext
                 .HasForeignKey(d => d.SucursalId);
 
             entity.HasIndex(e => e.ProductoId);
+        });
+
+        modelBuilder.Entity<RolPermiso>(entity =>
+        {
+            entity.HasKey(rp => new { rp.RolId, rp.PermisoId });
+
+            entity.HasOne(rp => rp.Rol)
+                .WithMany(r => r.RolPermisos)
+                .HasForeignKey(rp => rp.RolId);
+
+            entity.HasOne(rp => rp.Permiso)
+                .WithMany(p => p.RolPermisos)
+                .HasForeignKey(rp => rp.PermisoId);
+        });
+
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.HasOne(u => u.Rol)
+                .WithMany(r => r.Usuarios)
+                .HasForeignKey(u => u.RolId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);
